@@ -1,9 +1,11 @@
-# To test, enter 'import test.py' in console.
-
 # Import stats calculator:
 from statscalc import StatsCalculator
 calc = StatsCalculator()
 
-# Test 'Add' function:
-val = calc.Add(5, 3)
+# Test 'add' function:
+val = calc.add(5, 3)
 print val
+
+import numpy as np
+a = np.arrange(15).reshape(3)
+print a
