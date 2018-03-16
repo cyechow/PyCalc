@@ -46,8 +46,8 @@ def particlefilter(sequence, pos, stepsize, n):
 #%% Import video:
 # download from: http://www.ee.cuhk.edu.hk/~xgwang/grandcentral.html
 filename = "grandcentral.avi"
-vid = imageio.get_reader(filename)
-nFrames = vid.get_length();
+#vid = imageio.get_reader(filename)
+#nFrames = vid.get_length();
 
 vid_data = []
 vid_background_data = []
@@ -143,6 +143,7 @@ for count, imgElement in enumerate(vid_background_data, 1):
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
                 x,y,w,h = cv2.boundingRect(cnt)
+                
                 # Try to find this person in database and update the coords:
                 new = True
                 for i in persons:
@@ -152,28 +153,32 @@ for count, imgElement in enumerate(vid_background_data, 1):
                         new = False
                         i.updateCoords(cx,cy)
                         break
+                
                 # If it's a new person, add to db with the coords:
                 if new == True:
                     p = Person.MyPerson(pid,cx,cy, max_p_age)
                     persons.append(p)
-                    pid += 1     
+                    pid += 1
                 
                 cv2.circle(imgCopy,(cx,cy), 5, (0,0,255), -1)
-                img = cv2.rectangle(imgCopy,(x,y),(x+w,y+h),(0,255,0),2)            
+                imgCopy = cv2.rectangle(imgCopy,(x,y),(x+w,y+h),(0,255,0),2)            
                 cv2.drawContours(imgCopy, cnt, -1, (0,255,0), 3)
         
         vid_data_contoured.append( imgCopy )
         
-        imgCopyTracked = imgCopy
+        #imgCopyTracked = imgCopy
         # Trajectories
+        nPerson = 0
         for i in persons:
             if len(i.getTracks()) >= 2:
+                nPerson = nPerson + 1
                 pts = np.array(i.getTracks(), np.int32)
                 pts = pts.reshape((-1,1,2))
-                imgCopyTracked = cv2.polylines(imgCopyTracked,[pts],False,i.getRGB())
-            cv2.putText(imgCopyTracked, str(i.getId()),(i.getX(),i.getY()),font,0.3,i.getRGB(),1,cv2.LINE_AA)
-        
-        vid_data_tracked.append( imgCopyTracked )
+                #imgCopyTracked = cv2.polylines(imgCopyTracked,[pts],False,i.getRGB())
+                #cv2.putText(imgCopyTracked, str(i.getId()),(i.getX(),i.getY()),font,0.3,i.getRGB(),1,cv2.LINE_AA)
+
+        print(nPerson)        
+        #vid_data_tracked.append( imgCopyTracked )
 
 #%% Extract frames to array
 vid_data = [];
