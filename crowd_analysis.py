@@ -435,7 +435,12 @@ lbp_cascade = cv2.CascadeClassifier(pathTrainingData)
 #imageio.mimsave('towards_cam_v1.gif', vid_data_tracked, duration = 23/60 )
 #imageio.mimsave('towards_cam_haar_v1.gif', vid_data_faces_haar, duration = 20/60 )
 
-imageio.mimsave('away_from_cam_haar_v1.gif', vid_data_faces_haar, duration = 20/60 )
+#imageio.mimsave('away_from_cam_haar_v1.gif', vid_data_faces_haar, duration = 20/60 )
+
+writer = imageio.get_writer('away_from_cam_haar_v1.mp4',fps=fps)
+for im in vid_data_faces_haar:
+    writer.append(im[:,:,1])
+writer.close()
 
 #%%
 imageio.mimsave('towards_cam_haar_v2.gif', vid_data_tracked, duration = 20/60 )
